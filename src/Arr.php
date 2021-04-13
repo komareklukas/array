@@ -107,7 +107,7 @@ class Arr
     const CHECK_SOME = 2;
 
     private const AUTO_INDEX_KEY = '[]';
-    private const KEY_SEPARATOR = '|';
+    private const KEY_SEPARATOR = '.';
 
     /*--------------------------------------------------------------------------------------*\
      |                                        Common                                        |
@@ -330,11 +330,12 @@ class Arr
      *
      * @param array $array
      * @param int $mode Modify behaviour of unpack (see description of Arr::UNPACK_ constants)
+     * @param bool $toAray
      * @return array
      */
-    public static function unpack(array $array, int $mode = self::UNPACK_ALL): array
+    public static function unpack(array $array, int $mode = self::UNPACK_ALL, bool $toArray = FALSE): array
     {
-        return self::_unpack($array, $mode);
+        return self::_unpack($array, $mode, [], $toArray);
     }
 
     /**
@@ -406,7 +407,7 @@ class Arr
         return $checkSome ? false : true;
     }
 
-    private static function _unpack(array $array, int $mode = self::UNPACK_ALL, array $keys = []): array
+    private static function _unpack(array $array, int $mode = self::UNPACK_ALL, array $keys = [], bool $toArray): array
     {
         $result = [];
 
@@ -422,10 +423,15 @@ class Arr
                     )
                 )) {
                 $keys[] = $key;
-                $result += self::_unpack($value, $mode, $keys);
+                $result += self::_unpack($value, $mode, $keys, $toArray);
                 array_pop($keys);
             } else {
-                $result[implode(self::KEY_SEPARATOR, array_merge($keys, [$key]))] = $value;
+                if($toArray) {
+                    $result[implode(self::KEY_SEPARATOR, array_merge($keys, [$key]))] = array_merge($keys, [$key]);
+                }
+                else {
+                    $result[implode(self::KEY_SEPARATOR, array_merge($keys, [$key]))] = $value;
+                }
             }
         }
 
