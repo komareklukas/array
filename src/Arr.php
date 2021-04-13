@@ -107,7 +107,7 @@ class Arr
     const CHECK_SOME = 2;
 
     private const AUTO_INDEX_KEY = '[]';
-    private const KEY_SEPARATOR = '.';
+    private const KEY_SEPARATOR = '|';
 
     /*--------------------------------------------------------------------------------------*\
      |                                        Common                                        |
